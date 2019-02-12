@@ -18,8 +18,9 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * DEVELOPER NOTE:  Note that we don't need Spring... nothing in this test, or the tested class, cares about Spring.
- * This is all basic Mockito and JUnit. Don't involve Spring unless you have to; it just slows down your tests.
+ * DEVELOPER NOTE:  Note that we don't need Micronaut... nothing in this test, or the tested class, cares about
+ * Micronaut. This is all basic Mockito and JUnit. Don't involve Micronaut unless you have to; it just slows down your
+ * tests.
  * <p>
  * Comments have been added to this class to indicate the order that JUnit and Mockito execute this class.
  */
