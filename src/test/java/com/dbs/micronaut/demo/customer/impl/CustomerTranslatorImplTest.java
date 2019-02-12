@@ -1,8 +1,9 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
-import micronaut.demo.BaseTest;
-import micronaut.demo.customer.contract.CustomerDTO;
-import micronaut.demo.customer.entity.Customer;
+import com.dbs.micronaut.demo.BaseTest;
+import com.dbs.micronaut.demo.customer.CustomerTranslator;
+import com.dbs.micronaut.demo.customer.contract.CustomerDTO;
+import com.dbs.micronaut.demo.customer.entity.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

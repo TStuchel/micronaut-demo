@@ -1,4 +1,4 @@
-package micronaut.demo;
+package com.dbs.micronaut.demo;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

@@ -1,15 +1,17 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
+import com.dbs.micronaut.demo.customer.CustomerRepository;
+import com.dbs.micronaut.demo.customer.entity.Customer;
 import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.spring.tx.annotation.Transactional;
-import micronaut.demo.customer.entity.Customer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -24,18 +26,20 @@ import java.util.Optional;
  * just do its job of putting and pulling data from the external source, not making business or quality decisions about
  * the data.
  *
- * @see micronaut.demo.customer.entity.Customer
+ * @see Customer
  */
 @Singleton
-public class CustomerRepository {
+public class CustomerRepositoryImpl implements CustomerRepository {
 
     // ------------------------------------------------- DEPENDENCIES --------------------------------------------------
 
-    // DEVELOPER NOTE: This injected dependency is the JPA "EntityManager". Think of the EntityManager as an object that
-    // wraps the database and hides all interactions with the database. It is through the EntityManager that all
-    // entities (business objects) are read from the database and written to the database. The @PersistenceContext is
-    // a JPA annotation that indicates that this field should be automatically set (via dependency-injection) to the
-    // current EntityManager managing database access.
+    /**
+     * DEVELOPER NOTE: This injected dependency is the JPA "EntityManager". Think of the EntityManager as an object that
+     * wraps the database and hides all interactions with the database. It is through the EntityManager that all
+     * entities (business objects) are read from the database and written to the database. The @PersistenceContext is
+     * a JPA annotation that indicates that this field should be automatically set (via dependency-injection) to the
+     * current EntityManager managing database access.
+     */
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -46,13 +50,13 @@ public class CustomerRepository {
     // ------------------------------------------------- CONSTRUCTORS --------------------------------------------------
 
     /**
-     * Create a new CustomerRepository.
+     * Create a new CustomerRepositoryImpl.
      * <p>
      * DEVELOPER NOTE: The @Inject annotation is a core Java dependency-injection annotation that is equivalent to the
      * Spring annotation @Autowired (in fact, in Spring, you can use @Inject in place of @Autowired).
      */
     @Inject
-    public CustomerRepository(@CurrentSession EntityManager entityManager, ApplicationConfiguration applicationConfiguration) {
+    CustomerRepositoryImpl(@CurrentSession EntityManager entityManager, ApplicationConfiguration applicationConfiguration) {
         this.entityManager = entityManager;
         this.applicationConfiguration = applicationConfiguration;
     }
@@ -71,7 +75,11 @@ public class CustomerRepository {
      */
     @Transactional(readOnly = true)
     public Optional<Customer> findById(@NotNull Integer id) {
-        return Optional.ofNullable(entityManager.find(Customer.class, id));
+        Optional<Customer> customer = Optional.ofNullable(entityManager.find(Customer.class, id));
+        if (customer.isPresent()) {
+            customer.get().setLastReadTimestamp(ZonedDateTime.now());
+        }
+        return customer;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

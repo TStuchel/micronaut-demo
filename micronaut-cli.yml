@@ -1,5 +1,5 @@
 profile: service
-defaultPackage: micronaut.demo
+defaultPackage: com.dbs.micronaut.demo
 ---
 testFramework: junit
 sourceLanguage: java

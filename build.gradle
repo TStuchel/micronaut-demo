@@ -8,7 +8,7 @@ plugins {
 }
 
 version "0.1"
-group "micronaut.demo"
+group "com.dbs.micronaut.demo"
 
 repositories {
     mavenCentral()
@@ -54,7 +54,7 @@ shadowJar {
 
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-mainClassName = "micronaut.demo.Application"
+mainClassName = "com.dbs.micronaut.demo.Application"
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')

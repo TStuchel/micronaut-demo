@@ -1,7 +1,8 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
-import micronaut.demo.customer.contract.CustomerDTO;
-import micronaut.demo.customer.entity.Customer;
+import com.dbs.micronaut.demo.customer.CustomerTranslator;
+import com.dbs.micronaut.demo.customer.contract.CustomerDTO;
+import com.dbs.micronaut.demo.customer.entity.Customer;
 
 import javax.inject.Singleton;
 
@@ -10,10 +11,9 @@ import javax.inject.Singleton;
  * <p>
  * DEVELOPER NOTE: This layer of abstraction may seem like overkill. However, if you tie your business logic to web
  * service contract classes, then it becomes increasingly difficult to version your web service endpoints. Having
- * a separate endity class, even if it's nearly identical to the contract class, allows for an evolving layer of
- * business
- * logic while at the same time remaining backward compatible with any API versioning that is necessary. Also, having
- * proper business entity classes allows for implementing the "tell, don't ask" design principle.
+ * a separate entity class, even if it's nearly identical to the contract class, allows for an evolving layer of
+ * business logic while at the same time remaining backward compatible with any API versioning that is necessary. Also,
+ * having proper business entity classes allows for implementing the "tell, don't ask" design principle.
  */
 @Singleton
 public class CustomerTranslatorImpl implements CustomerTranslator {

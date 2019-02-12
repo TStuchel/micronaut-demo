@@ -1,5 +1,11 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
+import com.dbs.micronaut.demo.BaseTest;
+import com.dbs.micronaut.demo.customer.CustomerService;
+import com.dbs.micronaut.demo.customer.CustomerTranslator;
+import com.dbs.micronaut.demo.customer.contract.CustomerDTO;
+import com.dbs.micronaut.demo.customer.entity.Customer;
+import com.dbs.micronaut.demo.exception.BusinessException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -8,10 +14,6 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.annotation.MicronautTest;
 import io.micronaut.test.annotation.MockBean;
-import micronaut.demo.BaseTest;
-import micronaut.demo.customer.contract.CustomerDTO;
-import micronaut.demo.customer.entity.Customer;
-import micronaut.demo.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @MicronautTest
-public class CustomerControllerTest extends BaseTest {
+public class CustomerControllerImplTest extends BaseTest {
 
     // ------------------------------------------------- DEPENDENCIES --------------------------------------------------
 
@@ -32,9 +34,6 @@ public class CustomerControllerTest extends BaseTest {
     protected CustomerService customerService() {
         return mock(CustomerService.class);
     }
-
-    @Inject
-    private CustomerTranslator customerTranslator_spy;
 
     @MockBean(CustomerTranslatorImpl.class)
     protected CustomerTranslator customerTranslator() {
@@ -111,13 +110,38 @@ public class CustomerControllerTest extends BaseTest {
         doReturn(null).when(customerService_mock).getCustomer(customerId);
 
         // WHEN the customer API endpoint is called
+        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.GET(String.format(V1_GET_CUSTOMER_URI, customerId)), CustomerDTO.class));
+
         // THEN a NOT FOUND status should be returned.
-        try {
-            client.toBlocking().exchange(HttpRequest.GET(String.format(V1_GET_CUSTOMER_URI, customerId)), CustomerDTO.class);
-            fail("Should have thrown a HttpClientResponseException");
-        } catch (HttpClientResponseException ex) {
-            assertEquals(ex.getStatus(), HttpStatus.NOT_FOUND);
-        }
+        assertEquals(ex.getStatus(), HttpStatus.NOT_FOUND);
+
+        // Verify dependency mocks
+        verify(customerService_mock).getCustomer(customerId);
+    }
+
+    /**
+     * GIVEN an invalid customer ID
+     * WHEN the GET customer API endpoint is called
+     * AND a BusinessException is thrown by the service
+     * THEN a BAD REQUEST status should be returned.
+     */
+    @Test
+    void getCustomer_businessException() throws BusinessException {
+
+        // GIVEN a valid customer ID and a customer with that ID is in the system
+        Customer expectedCustomer = podamFactory.manufacturePojo(Customer.class);
+        Integer customerId = expectedCustomer.getCustomerId();
+
+        // Dependency Mocks
+        BusinessException exception = new BusinessException(podamFactory.manufacturePojo(String.class));
+        doThrow(exception).when(customerService_mock).getCustomer(customerId);
+
+        // WHEN the customer API endpoint is called
+        HttpClientResponseException ex = assertThrows(HttpClientResponseException.class, () -> client.toBlocking().exchange(HttpRequest.GET(String.format(V1_GET_CUSTOMER_URI, customerId)), CustomerDTO.class));
+
+        // THEN a NOT FOUND status should be returned.
+        assertEquals(ex.getStatus(), HttpStatus.BAD_REQUEST);
+        assertEquals(ex.getMessage(), exception.getMessage());
 
         // Verify dependency mocks
         verify(customerService_mock).getCustomer(customerId);

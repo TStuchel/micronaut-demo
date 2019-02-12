@@ -10,7 +10,7 @@ datasources:
 jpa:
   default:
     packages-to-scan:
-      - 'micronaut.demo'
+      - 'com.dbs.micronaut.demo'
     properties:
       hibernate:
         hbm2ddl:

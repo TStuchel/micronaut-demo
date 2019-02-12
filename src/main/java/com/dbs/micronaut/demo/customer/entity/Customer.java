@@ -1,5 +1,6 @@
-package micronaut.demo.customer.entity;
+package com.dbs.micronaut.demo.customer.entity;
 
+import com.dbs.micronaut.demo.customer.contract.CustomerDTO;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ import java.util.Set;
  * automatically generates property getter and setter methods so that you don't have to. It even makes an equals()
  * method that can compare the properties between two objects to determine if they are "logically" equal.
  *
- * @see micronaut.demo.customer.contract.CustomerDTO
+ * @see CustomerDTO
  */
 @Data
 @Entity
@@ -30,6 +31,8 @@ public class Customer {
     // -------------------------------------------------- PROPERTIES ---------------------------------------------------
 
     /**
+     * The unique identifier for this Customer.
+     * <p>
      * DEVELOPER NOTE: Every entity in JPA (and the associated database table) must have a primary key. This field is
      * annotated with @Id to indicate that it is the table's (and thus this object's) unique identifier/primary key.
      */
@@ -37,13 +40,26 @@ public class Customer {
     @Column(name = "CUST_ID")
     private Integer customerId;
 
+    /**
+     * The mailing street address for this Customer.
+     * <p>
+     * DEVELOPER NOTE: The @Column annotation specifies the exact column name. The database type of the column must
+     * match the Java data type. This is dependent on the database, but an example listing is here:
+     *
+     * @see <a href="https://docs.oracle.com/cd/E19501-01/819-3659/gcmaz/"/>
+     */
     @Column(name = "CUST_STREET_ADDR")
     private String streetAddress;
 
+    /**
+     * The full name of the customer.
+     */
     @Column(name = "CUST_FULL_NAME")
     private String fullName;
 
     /**
+     * A list of Orders associated with this Customer.
+     * <p>
      * DEVELOPER NOTE: A Customer has a list of Orders. These Orders are also annotated to be JPA entities. The JPA
      * annotation @OneToMany indicates that one Customer has many Orders. The collection of Orders that this Customer
      * "owns" must always be a Set (an unordered collection of unique objects). Notice the "lazy" fetch type. This
@@ -55,11 +71,13 @@ public class Customer {
     private Set<Order> orders = new HashSet<>(0);
 
     /**
+     * A list of order numbers associated with this Customer.
+     * <p>
      * DEVELOPER NOTE: The @Transient annotation tells JPA to NOT store (or read) values from this field into the
      * database. It's good for when you have "temporary" properties that only need to hang around in the Java code
      * during the lifetime of the object, but never need to be persisted in the database.
      */
-    //    @Transient
+    @Transient
     private ZonedDateTime lastReadTimestamp;
 
     // -----------------------------------------------------------------------------------------------------------------

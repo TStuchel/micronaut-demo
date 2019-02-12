@@ -1,20 +1,25 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
+import com.dbs.micronaut.demo.BaseTest;
+import com.dbs.micronaut.demo.customer.CustomerRepository;
+import com.dbs.micronaut.demo.customer.entity.Customer;
 import io.micronaut.test.annotation.MicronautTest;
-import micronaut.demo.BaseTest;
-import micronaut.demo.customer.entity.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * DEVELOPER NOTES: This test class uses the @DataJpaTest annotation to test the JPA-based CustomerRepository. Unlike
+ * DEVELOPER NOTES: This test class uses the @DataJpaTest annotation to test the JPA-based CustomerRepositoryImpl.
+ * Unlike
  * the Controller and Service test, this test needs Spring to initialize both a JPA EntityManager (to talk to the
- * database) as well as automatically implement the CustomerRepository interface. For this reason, this test class uses
+ * database) as well as automatically implement the CustomerRepositoryImpl interface. For this reason, this test class
+ * uses
  * field-style dependency injection and does not use Mockito.
  * <p>
  * There's some magic under the covers of this test. The H2 database engine is an in-memory database that knows SQL. It
@@ -24,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * build.gradle file.
  */
 @MicronautTest
-class CustomerRepositoryTest extends BaseTest {
+class CustomerRepositoryImplTest extends BaseTest {
 
     // ----------------------------------------------- MEMBER VARIABLES ------------------------------------------------
 
@@ -55,7 +60,7 @@ class CustomerRepositoryTest extends BaseTest {
      * THEN the customer record with the given ID should be read from the database and returned as a Customer object.
      */
     @Test
-    void getCustomer() {
+    void getCustomer_success() {
 
         // GIVEN a Customer with a given ID is in the database
         Customer expectedCustomer = podamFactory.manufacturePojo(Customer.class);
@@ -67,6 +72,24 @@ class CustomerRepositoryTest extends BaseTest {
 
         // THEN the customer record with the given ID should be read from the database and returned as a Customer object.
         assertEquals(expectedCustomer, actualCustomer);
+    }
+
+    /**
+     * GIVEN a Customer with a given ID is NOT in the database
+     * WHEN an attempt is made to read the Customer record from the database
+     * THEN the null should be returned.
+     */
+    @Test
+    void getCustomer_notFound() {
+
+        // GIVEN a Customer with a given ID is NOT in the database
+        Customer expectedCustomer = podamFactory.manufacturePojo(Customer.class);
+
+        // WHEN an attempt is made to read the Customer record from the database
+        Optional<Customer> actualCustomer = customerRepository.findById(expectedCustomer.getCustomerId());
+
+        // THEN the null should be returned.
+        assertFalse(actualCustomer.isPresent());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

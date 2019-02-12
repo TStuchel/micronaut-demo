@@ -1,8 +1,10 @@
-package micronaut.demo.customer;
+package com.dbs.micronaut.demo.customer.impl;
 
-import micronaut.demo.BaseTest;
-import micronaut.demo.customer.entity.Customer;
-import micronaut.demo.exception.BusinessException;
+import com.dbs.micronaut.demo.BaseTest;
+import com.dbs.micronaut.demo.customer.CustomerRepository;
+import com.dbs.micronaut.demo.customer.CustomerService;
+import com.dbs.micronaut.demo.customer.entity.Customer;
+import com.dbs.micronaut.demo.exception.BusinessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,8 +13,7 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -98,6 +99,29 @@ class CustomerServiceImplTest extends BaseTest { // <-- (1) JUnit instantiates a
 
         // Verify dependency mocks
         verify(customerRepository_mock).findById(customerId);
+    }
+
+    /**
+     * GIVEN an invalid customer ID
+     * WHEN the customer is requested
+     * THEN a BusinessException should be thrown
+     * AND it must contain an informative message.
+     */
+    @Test
+    void getCustomer_invalidCustomerId() {
+
+        // GIVEN an invalid customer ID
+        Integer customerId = podamFactory.manufacturePojo(Integer.class);
+
+        // Mocked to assume always invalid
+        doReturn(false).when(customerService_spy).isValidCustomerId(any());
+
+        // WHEN the customer is requested
+        // THEN a BusinessException should be thrown
+        BusinessException ex = assertThrows(BusinessException.class, () -> customerService_spy.getCustomer(customerId));
+
+        // AND it must contain an informative message.
+        assertEquals(String.format(CustomerService.INVALID_CUSTOMER_ID, customerId), ex.getMessage());
     }
 
     /**
