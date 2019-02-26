@@ -2,15 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build / Unit Test') {
             steps {
                 git 'https://github.com/TStuchel/micronaut-demo'
                 sh 'gradle build'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'gradle test'
+
             }
         }
     }
