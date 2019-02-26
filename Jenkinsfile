@@ -2,9 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Build / Unit Test') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/TStuchel/micronaut-demo'
+            }
+        }
+        stage('Build/Test') {
+            steps {
                 sh 'gradle clean build'
             }
         }
