@@ -8,5 +8,15 @@ pipeline {
                 sh 'gradle build'
             }
         }
+        stage('Test') {
+            steps {
+                sh 'gradle test'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'build/reports/**/*.xml'
+        }
     }
 }
