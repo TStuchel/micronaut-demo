@@ -14,8 +14,13 @@ pipeline {
             }
         }
         stage('SonarQube') {
-            withSonarQubeEnv('localhost:9000') {
-                sh './gradlew --info sonarqube'
+            steps {
+                script {
+                    scannerHome = tool 'SonarQube'
+                }
+                withSonarQubeEnv('localhost:9000') {
+                    sh './gradlew --info sonarqube'
+                }
             }
         }
     }
