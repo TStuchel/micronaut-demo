@@ -21,6 +21,11 @@ dependencyManagement {
 }
 
 dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+}
+
+dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
     annotationProcessor "io.micronaut.configuration:micronaut-openapi"
@@ -40,6 +45,7 @@ dependencies {
     compile "ch.qos.logback:logback-classic:1.2.3"
     compile "com.h2database:h2"
 
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "io.micronaut.test:micronaut-test-junit5:1.0.2"
     testCompile "org.mockito:mockito-junit-jupiter:2.22.0"
     testCompile "org.junit.jupiter:junit-jupiter-params:5.4.0"
@@ -58,4 +64,12 @@ mainClassName = "com.dbs.micronaut.demo.Application"
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
+}
+
+test {
+    useJUnitPlatform()
+    reports {
+        junitXml.enabled = true
+        html.enabled = false
+    }
 }
