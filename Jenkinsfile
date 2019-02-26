@@ -13,5 +13,10 @@ pipeline {
                 junit 'build/test-results/test/*.xml'
             }
         }
+        stage('SonarQube') {
+            withSonarQubeEnv('localhost:9000') {
+                sh './gradlew --info sonarqube'
+            }
+        }
     }
 }
