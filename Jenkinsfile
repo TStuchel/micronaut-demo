@@ -5,8 +5,7 @@ pipeline {
         stage('Build / Unit Test') {
             steps {
                 git 'https://github.com/TStuchel/micronaut-demo'
-                sh 'gradle build'
-
+                sh 'gradle clean build'
             }
         }
     }
