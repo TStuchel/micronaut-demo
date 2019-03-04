@@ -49,7 +49,7 @@ public class CustomerDTO {
      * ZonedDateTime.
      */
     @JsonProperty("lastReadTimestamp")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
     private ZonedDateTime lastReadTimestamp;
 
     /**
